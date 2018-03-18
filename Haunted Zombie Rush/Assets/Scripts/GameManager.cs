@@ -6,22 +6,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
 
-    [SerializeField]
-    private GameObject mainMenu;
-    [SerializeField]
-    private GameObject gameOverMenu;
-    [SerializeField]
-    private Vector3 playerStart;
-    [SerializeField]
-    private Vector3[] rockStartLocations;
-    [SerializeField]
-    private GameObject inGameScoreUI;
-    [SerializeField]
-    private GameObject endGameScoreUI;
-
+    [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject gameOverMenu;
+    [SerializeField] Vector3 playerStart;
+    [SerializeField] Vector3[] rockStartLocations;
+    [SerializeField] GameObject inGameScoreUI;
+    [SerializeField] GameObject endGameScoreUI;
+    [SerializeField] GameObject instructions;
+    [SerializeField] PlayerHealthBar energyBar;
 
     private GameObject[] rocks;
-
     private bool playerActive = false;
     private bool gameOver = false;
     private bool gameStarted = false;
@@ -57,27 +51,21 @@ public class GameManager : MonoBehaviour
         Assert.IsNotNull(mainMenu);
     }
 
-    void Start()
-    {
-    }
-
-    void Update()
-    {
-
-    }
-
-    public void PlayerCollided()
+    public void GameIsOver()
     {
         gameOver = true;
         StartCoroutine(RestartDelay());
         Coin.instance.Stop();
-    }
+        energyBar.Stop();
+    } 
 
+    // triggers once player starts moving
     public void PlayerStartedGame()
     {
         playerActive = true;
         Score.instance.StartScore();
         Coin.instance.Spawn();
+        energyBar.GameStart();
     }
 
     public void EnterGame()
@@ -85,7 +73,19 @@ public class GameManager : MonoBehaviour
         inGameScoreUI.SetActive(true);
         mainMenu.SetActive(false);
         gameStarted = true;
+        instructions.SetActive(true);
     }
+
+    public void ExitGame()
+    {
+        #if UNITY_EDITOR
+            // Application.Quit() does not work in the editor
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
+    }
+
 
     // adds a delay for the zombie to die before game over appears
     IEnumerator RestartDelay()
@@ -105,7 +105,6 @@ public class GameManager : MonoBehaviour
         inGameScoreUI.SetActive(true);
         Score.instance.ResetScore();
         endGameScoreUI.SetActive(false);
-
 
         ResetRocks();
         ResetPlayer();
@@ -146,7 +145,14 @@ public class GameManager : MonoBehaviour
         mainMenu.SetActive(true);
         inGameScoreUI.SetActive(false);
         endGameScoreUI.SetActive(false);
+        instructions.SetActive(false);
+        mainMenu.SetActive(true);
+    }
 
+    public void ToggleInstructions()
+    {
+        instructions.SetActive(instructions.activeSelf ? false : true);
+        print(instructions.activeSelf ? false : true);
     }
 
 }

@@ -1,2 +1,0 @@
-Exercise:
-4. Implement coin collection w/ osund and show total at end

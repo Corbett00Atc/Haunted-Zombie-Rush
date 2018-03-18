@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Rock : Object
+public class Rock : Platform
 {
     [SerializeField] Vector3 topPosition;
     [SerializeField] Vector3 botPosition;

@@ -11,7 +11,7 @@ public class PlayerOutOfBounds : MonoBehaviour
     {
         if (collision.gameObject.tag == "player")
         {
-            GameManager.instance.PlayerCollided();
+            GameManager.instance.GameIsOver();
         }
     }
 }

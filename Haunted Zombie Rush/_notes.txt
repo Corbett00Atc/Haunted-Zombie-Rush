@@ -1,8 +1,0 @@
-Got the transition between states going
-but need to find a better way to make the
-zombie spawn correctly. He spawns in right position
-and falls down without hitting the obstacles.
-
-- I solved this by freezing the zombie locations and
-removing all velocity and rotations.
-- I solved this by enabling detectCollisions again

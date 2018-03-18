@@ -4,16 +4,15 @@ using System.Collections;
 public class Coin : MonoBehaviour
 {
     public static Coin instance = null;
-    [SerializeField] private GameObject coinPrefab;
-    [SerializeField] private GameObject coinParent;
-    [SerializeField] private float coinSpeed;
-    [SerializeField] private float rotationSpeed;
+    [SerializeField] GameObject coinPrefab;
+    [SerializeField] GameObject coinParent;
+    [SerializeField] float coinSpeed;
+    [SerializeField] float rotationSpeed;
+    [SerializeField] float spawnRate;
+
     private float minSpawnY = 8.5f;
-    private float maxSpawnY = 15f;
+    private float maxSpawnY = 13.72f;
     private bool spawnTrue = false;
-    private float x = -4.6f;
-    private float z = -12.89f;
-    [SerializeField] private float spawnRate;
     public Quaternion rotation = Quaternion.Euler(180, 180, 0);
 
 
@@ -45,27 +44,22 @@ public class Coin : MonoBehaviour
         {
             GameObject coin = GameObject.FindWithTag("coin");
             coin.GetComponent<Rigidbody>().transform.Translate(Vector3.right * (coinSpeed * Time.deltaTime), Space.World);
-            coin.transform.Rotate(0, Time.deltaTime * rotationSpeed, 0, Space.World);
+            coin.transform.Rotate(Time.deltaTime * -rotationSpeed, Time.deltaTime * rotationSpeed, 0, Space.World);
         }
     }
 
 
-
     void SpawnCoin()
     {
-        Instantiate(coinPrefab, new Vector3(coinParent.transform.position.x, Random.Range(minSpawnY, maxSpawnY), coinParent.transform.position.z), Quaternion.identity);
-
+        Instantiate(coinPrefab, new Vector3(coinParent.transform.position.x, 
+                                            Random.Range(minSpawnY, maxSpawnY), 
+                                            coinParent.transform.position.z), 
+                                            Quaternion.identity
+                                            );
     }
 
-    public void Spawn()
-    {
-        spawnTrue = true;
-    }
-
-    public void Stop()
-    {
-        spawnTrue = false;
-    }
+    public void Spawn() { spawnTrue = true; }
+    public void Stop() { spawnTrue = false; }
 
     IEnumerator SpawnDelay()
     {
@@ -74,9 +68,7 @@ public class Coin : MonoBehaviour
             yield return new WaitForSeconds(spawnRate);
 
             if(spawnTrue == true)
-            {
                 SpawnCoin();
-            }
         }
     }
 }

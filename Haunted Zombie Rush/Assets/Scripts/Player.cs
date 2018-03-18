@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpForce = 100f;
     [SerializeField] private AudioClip sfxJump;
     [SerializeField] private AudioClip sfxDeath;
+    [SerializeField] private AudioClip sfxCoin;
+    [SerializeField] PlayerHealthBar energyBar;
+    [SerializeField] float coinAmount = 5f;
 
     private Animator anim;
     private Rigidbody rigidBody;
@@ -18,6 +21,8 @@ public class Player : MonoBehaviour
     {
         Assert.IsNotNull(sfxJump);
         Assert.IsNotNull(sfxDeath);
+        Assert.IsNotNull(sfxCoin);
+
     }
 
 	// Use this for initialization
@@ -35,7 +40,9 @@ public class Player : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                GameManager.instance.PlayerStartedGame();
+                if (!GameManager.instance.PlayerActive)
+                    GameManager.instance.PlayerStartedGame();
+                
                 anim.Play("Jump");
                 rigidBody.useGravity = true;
 
@@ -64,27 +71,33 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.tag == "obstacle")
         {
-            rigidBody.AddForce(new Vector2(150f, 50), ForceMode.Impulse);
-            rigidBody.detectCollisions = false; 
-            audioSource.PlayOneShot(sfxDeath);
-            GameManager.instance.PlayerCollided();
+            PlayerDeath(150f, 50f);
+            GameManager.instance.GameIsOver();
         }
 
         if(collision.gameObject.tag == "bridge")
         {
-            rigidBody.AddForce(new Vector2(150f, 130), ForceMode.Impulse);
-            rigidBody.detectCollisions = false;
-            audioSource.PlayOneShot(sfxDeath);
-            GameManager.instance.PlayerCollided();
+            PlayerDeath(150f, 130f);
+            GameManager.instance.GameIsOver();
         }
 
         // destroys the coin
         if(collision.gameObject.tag == "coin")
         {
             Score.instance.AddCoinScore();
+            audioSource.PlayOneShot(sfxCoin);
+            energyBar.EnergyChange(coinAmount);
             Destroy(collision.gameObject);
         }
     }
+
+    public void PlayerDeath(float x, float y)
+    {
+        rigidBody.detectCollisions = false;
+        rigidBody.AddForce(new Vector2(150f, 130), ForceMode.Impulse);
+        audioSource.PlayOneShot(sfxDeath);
+    }
+    
 
     public void ResetPosition()
     {
