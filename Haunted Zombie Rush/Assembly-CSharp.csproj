@@ -64,7 +64,6 @@
      <None Include="Assets\Zombies\models\animation list.txt" />
      <None Include="Assets\Simple UI\Fonts\OFL.txt" />
      <None Include="Assets\Unity_Free_8bit_snd\readme.txt" />
-     <None Include="Assets\Readme.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>E:/Program Files (x86)/Unitry/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

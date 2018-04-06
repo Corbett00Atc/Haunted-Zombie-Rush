@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject instructions;
     [SerializeField] PlayerHealthBar energyBar;
 
+    private Score scoreKeeper;
     private GameObject[] rocks;
     private bool playerActive = false;
     private bool gameOver = false;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         Assert.IsNotNull(mainMenu);
+
+        scoreKeeper = GetComponent<Score>();
     }
 
     public void GameIsOver()
@@ -57,6 +60,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(RestartDelay());
         Coin.instance.Stop();
         energyBar.Stop();
+        scoreKeeper.DisableScoreCountUp();
     } 
 
     // triggers once player starts moving
@@ -66,6 +70,7 @@ public class GameManager : MonoBehaviour
         Score.instance.StartScore();
         Coin.instance.Spawn();
         energyBar.GameStart();
+        scoreKeeper.StartScore();
     }
 
     public void EnterGame()
